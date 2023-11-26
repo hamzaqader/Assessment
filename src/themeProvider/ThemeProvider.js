@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button, ConfigProvider, Space } from 'antd';
+import '../styles/fonts.css'
 
 
 export default function ThemeProvider({ children }) {
@@ -7,8 +8,9 @@ export default function ThemeProvider({ children }) {
         <ConfigProvider
             theme={{
                 token: {
-                    colorPrimary : '#7A5CFA'
-                },
+                    colorPrimary : '#7A5CFA',
+                    fontFamily: 'Noto Sans, sans-serif'
+                 },
                 components: {
                     Button: {
                         defaultBg: '#7A5CFA',

@@ -11,4 +11,36 @@
    
 }
 
+.user-table-container {
+    background: #fff;
+    padding: 15px;
+  }
+  
+  .search-bar {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    margin-top: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: #fff;
+  }
+  
+  .search-label {
+    margin-bottom: 8px;
+    color: #333;
+  }
+  
+  .search-input {
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 8px;
+  }
+  
+  .pagination-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+  }
   

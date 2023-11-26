@@ -1,24 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Avatar, Pagination, Input, Space } from 'antd';
-import Userdata from "../usertable/userdata";
+
 
 const UserTable = () => {
-  const pageSize = 10; // Number of users per page
-  const [dataSource, setDataSource] = useState([]);
+  const pageSize = 10;
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
+  const [userData, setUserData] = useState([]);
 
   useEffect(() => {
-    // Your data fetching logic (if required)
-    // For now, using the provided static data
-    setDataSource(Userdata);
+    // Assuming user data is stored in sessionStorage with the key "userData"
+    const data = JSON.parse(sessionStorage.getItem('userData'));
+    if (data) setUserData(data);
   }, []);
 
   const columns = [
     {
-      title: 'Full Name',
-      dataIndex: 'fullName',
-      key: 'fullName',
+      title: 'UserName',
+      dataIndex: 'username',
+      key: 'username',
     },
     {
       title: 'Email',
@@ -27,19 +27,19 @@ const UserTable = () => {
     },
     {
       title: 'Profile Picture',
-      dataIndex: 'profilePicture',
-      key: 'profilePicture',
-      render: (text, record) => <Avatar src={text} alt={record.fullName} />,
+      dataIndex: 'imageUrl',
+      key: 'imageUrl',
+      render: (text, record) => <Avatar src={text} alt={record.username} />,
     },
     {
       title: 'Country',
-      dataIndex: 'country',
-      key: 'country',
+      dataIndex: 'Country',
+      key: 'Country',
     },
     {
       title: 'State',
-      dataIndex: 'state',
-      key: 'state',
+      dataIndex: 'States',
+      key: 'States',
     },
   ];
 
@@ -50,13 +50,13 @@ const UserTable = () => {
   const handleSearch = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
-    setCurrentPage(1); // Reset page to 1 when search term changes
+    setCurrentPage(1);
   };
 
-  const filteredData = dataSource.filter(
+  const filteredData = userData.filter(
     (user) =>
-      user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+      (user.username && user.username.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (user.email && user.email.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const startIdx = (currentPage - 1) * pageSize;
@@ -64,18 +64,15 @@ const UserTable = () => {
   const currentData = filteredData.slice(startIdx, endIdx);
 
   return (
-    <div style={{
-      background : '#FFF',
-      padding : '15px'
-    }}>
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px', position: 'sticky', top: '0px', zIndex: '5', background: '#FFF' }}>
+    <div className="user-table-container">
+      <div className="search-bar">
         <Space direction="vertical">
-          <label style={{ marginBottom: '8px', display: 'block', color: '#333' }}>Search by name or email</label>
+          <label className="search-label">Search by name or email</label>
           <Input
             placeholder="Enter your search term"
             value={searchTerm}
             onChange={handleSearch}
-            style={{ width: '300px', marginBottom: '8px' }}
+            className="search-input"
           />
         </Space>
       </div>
@@ -84,49 +81,24 @@ const UserTable = () => {
         columns={columns}
         pagination={false}
         rowKey="email"
-        virtual
-        scroll={{ y: 450 , x : 2000}}
+        scroll={{ x: true }}
       />
 
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
+      <div className="pagination-container">
         <Pagination
           total={filteredData.length}
           pageSize={pageSize}
           showSizeChanger={false}
           onChange={onChangePagination}
-          style={{ marginRight: '16px' }}
           current={currentPage}
           itemRender={(current, type, originalElement) => {
             if (type === 'prev') {
-              return <a style={{
-
-                border: '1px solid #ddd',
-                borderRadius: '2px',
-                padding: "5px"
-
-              }}>Previous</a>;
+              return <a className="pagination-link">Previous</a>;
             }
             if (type === 'next') {
-              return <a style={{
-
-                border: '1px solid #ddd',
-                borderRadius: '2px',
-                padding: "5px"
-
-              }}>Next</a>;
+              return <a className="pagination-link">Next</a>;
             }
-            return (
-              <div
-                style={{
-
-                  border: '1px solid #ddd',
-                  borderRadius: '2px',
-
-                }}
-              >
-                {originalElement}
-              </div>
-            );
+            return <div className="pagination-link">{originalElement}</div>;
           }}
         />
       </div>
