@@ -64,8 +64,11 @@ const UserTable = () => {
   const currentData = filteredData.slice(startIdx, endIdx);
 
   return (
-    <div>
-         <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
+    <div style={{
+      background : '#FFF',
+      padding : '15px'
+    }}>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px', position: 'sticky', top: '0px', zIndex: '5', background: '#FFF' }}>
         <Space direction="vertical">
           <label style={{ marginBottom: '8px', display: 'block', color: '#333' }}>Search by name or email</label>
           <Input
@@ -81,8 +84,10 @@ const UserTable = () => {
         columns={columns}
         pagination={false}
         rowKey="email"
+        virtual
+        scroll={{ y: 450 , x : 2000}}
       />
-     
+
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
         <Pagination
           total={filteredData.length}
@@ -93,30 +98,30 @@ const UserTable = () => {
           current={currentPage}
           itemRender={(current, type, originalElement) => {
             if (type === 'prev') {
-              return <a   style={{
-                  
+              return <a style={{
+
                 border: '1px solid #ddd',
                 borderRadius: '2px',
-                padding:"5px"
-               
+                padding: "5px"
+
               }}>Previous</a>;
             }
             if (type === 'next') {
-              return <a   style={{
-                  
+              return <a style={{
+
                 border: '1px solid #ddd',
                 borderRadius: '2px',
-                padding:"5px"
-               
+                padding: "5px"
+
               }}>Next</a>;
             }
             return (
               <div
                 style={{
-                  
+
                   border: '1px solid #ddd',
                   borderRadius: '2px',
-                 
+
                 }}
               >
                 {originalElement}

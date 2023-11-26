@@ -7,20 +7,20 @@ import {
   MenuFoldOutlined,
   TableOutlined,
   InfoCircleOutlined,
-  
+
 } from '@ant-design/icons';
-import { Switch,Radio} from 'antd';
+import { Switch, Radio , Grid} from 'antd';
 
 const { Sider, Content } = Layout;
 
-const MySidebar = () => {
+const MySidebar = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [switchValue, setSwitchValue] = useState(false);
   const [userType, setUserType] = useState('');
 
   const handleSwitchChange = (checked) => {
     setSwitchValue(checked);
-   
+
     if (!checked) {
       setUserType('');
     }
@@ -36,7 +36,7 @@ const MySidebar = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Sider
+      {/* <Sider
         trigger={null}
         collapsible
         collapsed={collapsed}
@@ -53,25 +53,28 @@ const MySidebar = () => {
           })}
         </div>
         <Menu theme="light" mode="inline" defaultSelectedKeys={['1']}>
-          
-         
+
+
           <Menu.Item key="1" icon={<TableOutlined />}>
-            <Link to="/">User Form</Link>
+            <Link to="/userForm">User Form</Link>
           </Menu.Item>
           <Menu.Item key="2" icon={<InfoCircleOutlined />}>
             <Link to="/usertable">User Table</Link>
           </Menu.Item>
         </Menu>
-      </Sider>
+      </Sider> */}
       <Layout className="site-layout">
         <Content
           className="site-layout-background"
           style={{
             margin: '24px 16px',
             padding: 24,
-            minHeight: 280,
+            height: 280,
+            overflowY : 'hidden'
           }}
-        ></Content>
+        >
+          {children}
+        </Content>
       </Layout>
     </Layout>
   );

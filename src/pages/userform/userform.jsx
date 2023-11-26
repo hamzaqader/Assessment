@@ -1,13 +1,34 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, Upload, Col, Row, Select, Radio, Switch } from 'antd';
-import { UploadOutlined, PlusOutlined } from '@ant-design/icons';
-
+import { Form, Input, Button, Upload, Col, Row, Select, Radio, Switch, message } from 'antd';
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { DropdownIconTop, DropdownIconDown } from '../../utils/icons';
+import './useForm.css'
 const { Option } = Select;
+
+const getBase64 = (img, callback) => {
+  const reader = new FileReader();
+  reader.addEventListener('load', () => callback(reader.result));
+  reader.readAsDataURL(img);
+};
+const beforeUpload = (file) => {
+  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+  if (!isJpgOrPng) {
+    message.error('You can only upload JPG/PNG file!');
+  }
+  const isLt2M = file.size / 1024 / 1024 < 2;
+  if (!isLt2M) {
+    message.error('Image must smaller than 2MB!');
+  }
+  return isJpgOrPng && isLt2M;
+};
 
 const UserForm = () => {
   const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
   const [switchValue, setSwitchValue] = useState(false);
   const [userType, setUserType] = useState('');
+  const [imageUrl, setImageUrl] = useState();
+  const [isSelectOpen, setIsSelectOpen] = useState(false)
 
   const onFinish = (values) => {
     console.log('Received values:', values);
@@ -17,6 +38,19 @@ const UserForm = () => {
     console.log('Failed:', errorInfo);
   };
 
+  const handleChange = (info) => {
+    if (info.file.status === 'uploading') {
+      setLoading(true);
+      return;
+    }
+    if (info.file.status === 'done') {
+      // Get this url from response in real world.
+      getBase64(info.file.originFileObj, (url) => {
+        setLoading(false);
+        setImageUrl(url);
+      });
+    }
+  };
   const normFile = (e) => {
     if (Array.isArray(e)) {
       return e;
@@ -35,6 +69,24 @@ const UserForm = () => {
     setUserType(e.target.value);
   };
 
+  const uploadButton = (
+    <div >
+      <Button
+        style={{
+          width: '100%',
+          minHeight: '31px',
+          background: '#E4E4E4',
+          borderRadius: '3px',
+          color: '#333',
+          fontSize: '11px'
+        }}
+      >
+        {loading ? <LoadingOutlined /> : <PlusOutlined />}
+        Browse
+      </Button>
+    </div>
+  );
+
   return (
     <Form
       form={form}
@@ -46,16 +98,28 @@ const UserForm = () => {
     >
       <Row gutter={[16, 16]}>
         <Col span={12}>
-          <Form.Item
-            style={{ width: '159px', height: '73px', border: '1px dashed black' }}
-            name="image"
-            valuePropName="fileList"
-            getValueFromEvent={normFile}
+          <Upload
+            name="avatar"
+            listType="picture-card"
+            className="avatar-uploader"
+            showUploadList={false}
+            action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
+            beforeUpload={beforeUpload}
+            onChange={handleChange}
+
           >
-            <Upload name="logo" action="/upload.do" listType="picture">
-              <Button icon={<PlusOutlined />}>Browse</Button>
-            </Upload>
-          </Form.Item>
+            {imageUrl ? (
+              <img
+                src={imageUrl}
+                alt="avatar"
+                style={{
+                  width: '100%',
+                }}
+              />
+            ) : (
+              uploadButton
+            )}
+          </Upload>
         </Col>
       </Row>
 
@@ -66,7 +130,7 @@ const UserForm = () => {
             name="username"
             rules={[{ required: true, message: 'Cannot be empty' }]}
           >
-            <Input />
+            <Input size='large' />
           </Form.Item>
         </Col>
         <Col span={12}>
@@ -78,7 +142,7 @@ const UserForm = () => {
               { type: 'email', message: 'Invalid email address' },
             ]}
           >
-            <Input />
+            <Input size='large' />
           </Form.Item>
         </Col>
       </Row>
@@ -90,7 +154,7 @@ const UserForm = () => {
             name="phone"
             rules={[{ required: true, message: 'Cannot be empty' }]}
           >
-            <Input />
+            <Input size='large' />
           </Form.Item>
         </Col>
         <Col span={12}>
@@ -99,7 +163,11 @@ const UserForm = () => {
             name="timings"
             rules={[{ required: true, message: 'Cannot be empty' }]}
           >
-            <Select style={{ width: '100%' }} placeholder="Select Timing">
+            <Select
+              size='large'
+              onFocus={() => setIsSelectOpen((prev) => !prev)}
+              suffixIcon={isSelectOpen ? <DropdownIconDown /> : <DropdownIconTop />}
+              placeholder="Select Timing">
               <Option value="morning">Morning</Option>
               <Option value="evening">Evening</Option>
               <Option value="night">Night</Option>
@@ -114,8 +182,8 @@ const UserForm = () => {
           <br />
           <br />
 
-          {switchValue && (
-            <Radio.Group onChange={handleRadioChange} value={userType}>
+          {!switchValue && (
+            <Radio.Group onChange={handleRadioChange} value={userType} style={{ marginBottom: '10px' }}>
               <Radio value="teacher">Teacher</Radio>
               <Radio value="user">User</Radio>
               <Radio value="admin">Admin</Radio>
@@ -123,10 +191,12 @@ const UserForm = () => {
           )}
         </Col>
       </Row>
-
-      <Form.Item>
-        <Button type="primary" htmlType="submit">
-          Add User
+      <Form.Item style={{
+        display: 'flex',
+        justifyContent: 'flex-end',
+      }}>
+        <Button htmlType="submit" size='large'>
+          ADD USER
         </Button>
       </Form.Item>
     </Form>
