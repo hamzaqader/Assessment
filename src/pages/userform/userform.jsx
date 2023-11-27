@@ -164,6 +164,9 @@ const UserForm = () => {
               uploadButton
             )}
           </Upload>
+          <label htmlFor="avatar" style={{ marginTop: '2px', display: 'block' }}>
+           PNG , JPEG , JPG
+          </label>
         </Col>
       </Row>
 
@@ -172,7 +175,7 @@ const UserForm = () => {
           <Form.Item
             label="User name"
             name="username"
-            rules={[{ required: true, message: 'Please enter a username' }]}
+            rules={[{ required: true, message: 'Cannot be empty' }]}
             required={false}
           >
             <Input size="large" placeholder="Enter Username" />
@@ -183,7 +186,7 @@ const UserForm = () => {
             label="Email"
             name="email"
             rules={[
-              { required: true, message: 'Please enter an email address' },
+              { required: true,  message: 'Cannot be empty' },
               { type: 'email', message: 'Invalid email address' },
             ]}
           >
@@ -197,7 +200,7 @@ const UserForm = () => {
           <Form.Item
             label="Phone number"
             name="phone"
-            rules={[{ required: true, message: 'Please enter a phone number' }]}
+            rules={[{ required: true,  message: 'Cannot be empty' }]}
             required={false}
           >
             <Input size="large" placeholder="Enter PhoneNo" />
@@ -207,7 +210,7 @@ const UserForm = () => {
           <Form.Item
             label="Country"
             name="Country"
-            rules={[{ required: true, message: 'Please select a country' }]}
+            rules={[{ required: true, message: 'Cannot be empty' }]}
           >
             <Select
               size="large"
@@ -230,7 +233,7 @@ const UserForm = () => {
             required={false}
             label="States"
             name="States"
-            rules={[{ required: true, message: 'Please enter a username' }]}
+            rules={[{ required: true, message: 'Cannot be empty' }]}
           >
             <Select
               size="large"
